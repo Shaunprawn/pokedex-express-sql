@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const pg = require('pg');
 
+
 // Initialise postgres client
-const client = new Client({
-  user: 'akira',
+const configs = {
+  user: 'root',
   host: '127.0.0.1',
   database: 'pokemons',
   port: 5432,
-});
+};
 
 const pool = new pg.Pool(configs);
 
