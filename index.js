@@ -60,41 +60,57 @@ app.get('/', (req, res) => {
 
       res.render('Home',pokeAll);
 
-      // for (let i = 0; i < result.rows.length; i++) {
-      //   console.log(result.rows[i])
-        
-      // }
-
-      // redirect to home page
-      // response.send( result.rows );
     }
   });
 
 });
 
-app.get('/new', (request, response) => {
-  // respond with HTML page with form to create new pokemon
-  response.render('new');
-});
+app.get('/pokemon/new',(req, res) => {
+
+res.render('New');
+})
+
+
+app.get('/pokemon/:id', (req, res) => {
+  let id = parseInt(req.params.id);
+  //turn id into integer
+  let queryString = 'SELECT * FROM pokemon WHERE id = $1';
+  const val = [id];
+
+  pool.query(queryString, val, (err,result) => {
+    if (result.row[0]===undefined) {
+      res.status(404).send('pokemon not in database');
+    } else {
+      let pokeGet = {pokemon:result.rows[0]}
+      res.render('Edit',pokeGet)
+    }
+  })
+});  
+
+
 
 
 app.post('/pokemon', (req, response) => {
   let params = req.body;
 
-  const queryString = 'INSERT INTO pokemon(name, height) VALUES($1, $2)'
-  const values = [params.name, params.height];
+  const queryString = 'INSERT INTO pokemon(num, name, img, weight, height,) VALUES($1, $2, $3, $4, $5)'
+  const values = [params.num, params.name, params.img, params.weight, params.height];
 
-  pool.query(queryString, values, (err, res) => {
+  pool.query(queryString, values, (err, result) => {
     if (err) {
       console.log('query error:', err.stack);
     } else {
-      console.log('query result:', res);
+      console.log('query result:', result);
 
       // redirect to home page
       response.redirect('/');
     }
   });
 });
+
+app.put('/pokemon/:id',(req,res))
+
+
 
 
 /**
