@@ -43,7 +43,7 @@ app.engine('jsx', reactEngine);
  * ===================================
  */
 
-app.get('/', (req, response) => {
+app.get('/', (req, res) => {
   // query database for all pokemon
 
   // respond with HTML page displaying all pokemon
@@ -56,8 +56,17 @@ app.get('/', (req, response) => {
     } else {
       console.log('query result:', result);
 
+      let pokeAll = {pokemon : result.rows}
+
+      res.render('Home',pokeAll);
+
+      // for (let i = 0; i < result.rows.length; i++) {
+      //   console.log(result.rows[i])
+        
+      // }
+
       // redirect to home page
-      response.send( result.rows );
+      // response.send( result.rows );
     }
   });
 
